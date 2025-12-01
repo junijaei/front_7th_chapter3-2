@@ -17,6 +17,17 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* Path Mapping */
+    "baseUrl": ".",
+    "paths": {
+      "@/components/*": ["./src/basic/components/*", "./src/advanced/components/*"],
+      "@/hooks/*": ["./src/basic/hooks/*", "./src/advanced/hooks/*"],
+      "@/models/*": ["./src/basic/models/*", "./src/advanced/models/*"],
+      "@/utils/*": ["./src/basic/utils/*", "./src/advanced/utils/*"],
+      "@/constants/*": ["./src/basic/constants/*", "./src/advanced/constants/*"],
+      "@/*": ["./src/*"]
+    },
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
