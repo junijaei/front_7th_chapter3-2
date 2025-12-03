@@ -12,7 +12,7 @@ export const validateAddCoupon = (
       error: 'DUPLICATED',
       message: '이미 존재하는 쿠폰 코드입니다.',
     };
-  return { valid: true, error: null };
+  return { valid: true, error: null, message: '쿠폰이 추가되었습니다.' };
 };
 
 export const validateRemoveCoupon = (
@@ -25,29 +25,25 @@ export const validateRemoveCoupon = (
       error: 'NOT_FOUND',
       message: '존재하지 않는 쿠폰입니다.',
     };
-  return { valid: true, error: null };
+  return { valid: true, error: null, message: '쿠폰이 삭제되었습니다.' };
 };
 
 export const validateCouponDiscount = (
-  coupon: Coupon,
-  value: number
+  discountType: 'percentage' | 'amount',
+  discountValue: number
 ): CouponValidation => {
-  if (coupon.discountType === 'percentage') {
-    if (value > 100) {
-      return {
-        valid: false,
-        error: 'INVALID_DISCOUNT',
-        message: '할인율은 100%를 초과할 수 없습니다',
-      };
-    }
-  } else {
-    if (value > 100000) {
-      return {
-        valid: false,
-        error: 'INVALID_DISCOUNT',
-        message: '할인 금액은 100,000원을 초과할 수 없습니다',
-      };
-    }
+  if (discountType === 'percentage' && discountValue > 100) {
+    return {
+      valid: false,
+      error: 'INVALID_DISCOUNT',
+      message: '할인율은 100%를 초과할 수 없습니다',
+    };
+  } else if (discountType === 'amount' && discountValue > 100000) {
+    return {
+      valid: false,
+      error: 'INVALID_DISCOUNT',
+      message: '할인 금액은 100,000원을 초과할 수 없습니다',
+    };
   }
-  return { valid: true, error: null };
+  return { valid: true, error: null, message: '' };
 };

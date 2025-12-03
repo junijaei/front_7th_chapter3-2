@@ -16,5 +16,8 @@ export const isValidPrice = (price: number) => {
   return price >= 0;
 };
 export const extractNumbers = (value: string) => {
-  return Number(value.replace(/[^0-9]/g, ''));
+  return value.replace(/[^0-9]/g, '');
+};
+export const isNumericString = (value: string) => {
+  return value === extractNumbers(value);
 };
