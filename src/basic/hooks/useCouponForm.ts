@@ -1,4 +1,4 @@
-import { addNotification, validateCouponDiscount } from '@/basic/models';
+import { validateCouponDiscount } from '@/basic/models';
 import { Coupon, CouponValidation } from '@/types';
 import { isNumericString } from '@/utils/validators';
 import { ChangeEvent, FocusEvent, FormEvent, useState } from 'react';
@@ -42,12 +42,9 @@ export const useCouponForm = (
       if (field === 'discountValue') {
         const value = parseInt(e.target.value) || 0;
 
-        const { valid, message } = validateCouponDiscount(
-          form.discountType,
-          value
-        );
-        if (!valid) addNotification(message, 'error');
+        const result = validateCouponDiscount(form.discountType, value);
         setValue(field, normalizeValue(field, value, form));
+        return result;
       }
     };
 
@@ -61,16 +58,12 @@ export const useCouponForm = (
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const { valid, message } = addCoupon(form);
-
-    if (!valid) {
-      addNotification(message, 'error');
-      return;
+    const result = addCoupon(form);
+    if (result.valid) {
+      reset();
+      close();
     }
-
-    addNotification(message, 'success');
-    reset();
-    close();
+    return result;
   };
 
   const reset = () => {

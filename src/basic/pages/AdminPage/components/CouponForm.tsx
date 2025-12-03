@@ -1,5 +1,6 @@
 import { Input } from '@/components/ui';
 import { useCouponForm } from '@/hooks/useCouponForm';
+import { addNotification } from '@/models/notification';
 import { Coupon, CouponValidation } from '@/types';
 
 interface CouponsFormProps {
@@ -14,7 +15,13 @@ export const CouponsForm = ({ addCoupon, close }: CouponsFormProps) => {
 
   return (
     <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-      <form onSubmit={onSubmit} className="space-y-4">
+      <form
+        onSubmit={(e) => {
+          const { valid, message } = onSubmit(e);
+          addNotification(message, valid ? 'success' : 'error');
+        }}
+        className="space-y-4"
+      >
         <h3 className="text-md font-medium text-gray-900">새 쿠폰 생성</h3>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div>
@@ -60,7 +67,11 @@ export const CouponsForm = ({ addCoupon, close }: CouponsFormProps) => {
             <Input
               value={form.discountValue}
               onChange={onChangeHandler('discountValue')}
-              onBlur={onBlurHandler('discountValue')}
+              onBlur={(e) => {
+                const result = onBlurHandler('discountValue')(e);
+                if (result && !result.valid)
+                  addNotification(result.message, 'error');
+              }}
               placeholder={form.discountType === 'amount' ? '5000' : '10'}
               required
             />

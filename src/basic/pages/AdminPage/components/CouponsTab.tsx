@@ -1,4 +1,5 @@
 import { useCoupons } from '@/hooks/useCoupons';
+import { addNotification } from '@/models/notification';
 import { CouponsForm } from '@/pages/AdminPage/components/CouponForm';
 import { formatPercentage, formatPrice } from '@/utils/formatters';
 import { useState } from 'react';
@@ -35,7 +36,10 @@ export const CouponsTab = () => {
                   </div>
                 </div>
                 <button
-                  onClick={() => removeCoupon(coupon.code)}
+                  onClick={() => {
+                    const { valid, message } = removeCoupon(coupon.code);
+                    addNotification(message, valid ? 'success' : 'error');
+                  }}
                   className="text-gray-400 hover:text-red-600 transition-colors"
                 >
                   <svg
