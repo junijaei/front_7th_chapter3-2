@@ -1,18 +1,3 @@
-// TODO: 상품 관리 Hook
-// 힌트:
-// 1. 상품 목록 상태 관리 (localStorage 연동 고려)
-// 2. 상품 CRUD 작업
-// 3. 재고 업데이트
-// 4. 할인 규칙 추가/삭제
-//
-// 반환할 값:
-// - products: 상품 배열
-// - updateProduct: 상품 정보 수정
-// - addProduct: 새 상품 추가
-// - updateProductStock: 재고 수정
-// - addProductDiscount: 할인 규칙 추가
-// - removeProductDiscount: 할인 규칙 삭제
-
 import {
   addDiscountToList,
   addProductToList,
@@ -20,8 +5,11 @@ import {
   removeProductInList,
   updateProductInList,
   updateStockInList,
+  validateAddProduct,
+  validateRemoveProduct,
+  validateUpdateProduct,
 } from '@/models/product';
-import { Discount, Product } from '@/types';
+import { Discount, Product, ProductValidation } from '@/types';
 import { useLocalStorage } from '@/utils/hooks/useLocalStorage';
 import { useCallback } from 'react';
 
@@ -65,34 +53,65 @@ export function useProducts() {
     initialProducts
   );
 
-  const addProduct = useCallback((newProduct: Omit<Product, 'id'>) => {
-    setProducts((prev) => addProductToList(prev, newProduct));
-  }, []);
+  const addProduct = useCallback(
+    (newProduct: Omit<Product, 'id'>): ProductValidation => {
+      const result = validateAddProduct(products, newProduct);
+      if (result.valid) {
+        setProducts((prev) => addProductToList(prev, newProduct));
+      }
+      return result;
+    },
+    [products, setProducts]
+  );
 
-  const updateProduct = useCallback((product: Partial<Product>) => {
-    setProducts((prev) => updateProductInList(prev, product));
-  }, []);
+  const updateProduct = useCallback(
+    (product: Partial<Product>): ProductValidation => {
+      if (!product.id) {
+        return {
+          valid: false,
+          error: 'NOT_FOUND',
+          message: '상품 ID가 필요합니다.',
+        };
+      }
+      const result = validateUpdateProduct(products, product.id, product);
+      if (result.valid) {
+        setProducts((prev) => updateProductInList(prev, product));
+      }
+      return result;
+    },
+    [products, setProducts]
+  );
 
-  const deleteProduct = useCallback((productId: string) => {
-    setProducts((prev) => removeProductInList(prev, productId));
-  }, []);
+  const deleteProduct = useCallback(
+    (productId: string): ProductValidation => {
+      const result = validateRemoveProduct(products, productId);
+      if (result.valid) {
+        setProducts((prev) => removeProductInList(prev, productId));
+      }
+      return result;
+    },
+    [products, setProducts]
+  );
 
-  const updateProductStock = useCallback((productId: string, stock: number) => {
-    setProducts((prev) => updateStockInList(prev, productId, stock));
-  }, []);
+  const updateProductStock = useCallback(
+    (productId: string, stock: number) => {
+      setProducts((prev) => updateStockInList(prev, productId, stock));
+    },
+    [setProducts]
+  );
 
   const addProductDiscount = useCallback(
     (productId: string, discount: Discount) => {
       setProducts((prev) => addDiscountToList(prev, productId, discount));
     },
-    []
+    [setProducts]
   );
 
   const removeProductDiscount = useCallback(
     (productId: string, discount: Discount) => {
       setProducts((prev) => removeDiscountFromList(prev, productId, discount));
     },
-    []
+    [setProducts]
   );
 
   return {

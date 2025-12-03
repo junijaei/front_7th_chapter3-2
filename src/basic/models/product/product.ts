@@ -4,6 +4,10 @@ export const generateProductId = (): string => {
   return `p${Date.now()}`;
 };
 
+export const findProductById = (products: Product[], productId: string) => {
+  return products.find((item) => item.id === productId);
+};
+
 export const addProductToList = (
   products: Product[],
   product: Omit<Product, 'id'>

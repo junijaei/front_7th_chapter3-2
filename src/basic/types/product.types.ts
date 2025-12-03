@@ -3,6 +3,7 @@ import { Validation } from '@/types/validation.types';
 export type ProductValidationError =
   | 'INVALID_PRICE'
   | 'INVALID_STOCK'
+  | 'DUPLICATED'
   | 'NOT_FOUND';
 
 export type ProductValidation = Validation<ProductValidationError>;
