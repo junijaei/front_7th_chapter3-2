@@ -3,12 +3,18 @@ import { useCart } from '@/hooks/useCart';
 import { useCoupons } from '@/hooks/useCoupons';
 import { useFilter } from '@/hooks/useFilter';
 import { useProducts } from '@/hooks/useProducts';
-import { addNotification } from '@/models/notification';
+import { Notification } from '@/models/notification';
 import { CartItemList } from '@/pages/ProductsPage/components/CartItemList';
 import { ProductList } from '@/pages/ProductsPage/components/ProductList';
 import { Product } from '@/types';
 
-export const ProductsPage = ({ goPage }: { goPage: (id: string) => void }) => {
+export const ProductsPage = ({
+  goPage,
+  addNotification,
+}: {
+  goPage: (id: string) => void;
+  addNotification: (message: string, type: Notification['type']) => void;
+}) => {
   const { products } = useProducts();
   const {
     cart,
@@ -85,6 +91,7 @@ export const ProductsPage = ({ goPage }: { goPage: (id: string) => void }) => {
               cart={cart}
               products={filteredList}
               addToCart={addToCart}
+              addNotification={addNotification}
               isLoading={isFiltering}
               query={query}
             />
@@ -97,6 +104,7 @@ export const ProductsPage = ({ goPage }: { goPage: (id: string) => void }) => {
                 cart={cart}
                 removeFromCart={removeFromCart}
                 updateQuantity={updateQuantity}
+                addNotification={addNotification}
               />
               {cart.length > 0 && (
                 <>

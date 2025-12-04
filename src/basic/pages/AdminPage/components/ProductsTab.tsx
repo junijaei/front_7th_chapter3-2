@@ -1,11 +1,15 @@
 import { useProducts } from '@/hooks/useProducts';
-import { addNotification } from '@/models/notification';
+import { Notification } from '@/models/notification';
 import { ProductForm } from '@/pages/AdminPage/components/ProductForm';
 import { Product } from '@/types';
 import { formatPrice } from '@/utils/formatters';
 import { useState } from 'react';
 
-export const ProductsTab = () => {
+export const ProductsTab = ({
+  addNotification,
+}: {
+  addNotification: (message: string, type: Notification['type']) => void;
+}) => {
   const { products, addProduct, updateProduct, deleteProduct } = useProducts();
 
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -73,7 +77,7 @@ export const ProductsTab = () => {
                   {product.name}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {formatPrice(product.price)}
+                  {formatPrice(product.price)}원
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <span
@@ -117,6 +121,7 @@ export const ProductsTab = () => {
           updateProduct={updateProduct}
           editingProduct={editingProduct}
           close={closeForm}
+          addNotification={addNotification}
         />
       )}
     </section>

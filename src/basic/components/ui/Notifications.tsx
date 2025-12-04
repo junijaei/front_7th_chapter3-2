@@ -1,7 +1,14 @@
-import { useNotifications } from '@/hooks/useNotifications';
+import { Notification } from '@/models/notification';
 
-export const Notifications = () => {
-  const { notifications, removeNotification } = useNotifications();
+interface NotificationsProps {
+  notifications: Notification[];
+  removeNotification: (id: number) => void;
+}
+
+export const Notifications = ({
+  notifications,
+  removeNotification,
+}: NotificationsProps) => {
   return (
     <>
       {notifications.length > 0 && (

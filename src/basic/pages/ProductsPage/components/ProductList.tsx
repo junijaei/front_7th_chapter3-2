@@ -1,3 +1,4 @@
+import { Notification } from '@/models/notification';
 import { ProductItem } from '@/pages/ProductsPage/components/ProductItem';
 import { CartItem, CartValidation, Product } from '@/types';
 
@@ -5,12 +6,14 @@ export const ProductList = ({
   products,
   cart,
   addToCart,
+  addNotification,
   isLoading,
   query,
 }: {
   products: Product[];
   cart: CartItem[];
   addToCart: (product: Product) => CartValidation;
+  addNotification: (message: string, type: Notification['type']) => void;
   isLoading: boolean;
   query: string;
 }) => {
@@ -44,6 +47,7 @@ export const ProductList = ({
               product={product}
               cart={cart}
               onAddToCart={addToCart}
+              addNotification={addNotification}
             />
           ))}
         </div>

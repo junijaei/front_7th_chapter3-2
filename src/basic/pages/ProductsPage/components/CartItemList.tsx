@@ -1,3 +1,4 @@
+import { Notification } from '@/models/notification';
 import { CartItemRow } from '@/pages/ProductsPage/components/CartItemRow';
 import { CartItem, CartValidation } from '@/types';
 
@@ -26,10 +27,12 @@ export const CartItemList = ({
   cart,
   updateQuantity,
   removeFromCart,
+  addNotification,
 }: {
   cart: CartItem[];
   removeFromCart: (productId: string) => CartValidation;
   updateQuantity: (productId: string, newQuantity: number) => CartValidation;
+  addNotification: (message: string, type: Notification['type']) => void;
 }) => {
   return (
     <section className="bg-white rounded-lg border border-gray-200 p-4">
@@ -60,6 +63,7 @@ export const CartItemList = ({
               cart={cart}
               updateQuantity={updateQuantity}
               removeFromCart={removeFromCart}
+              addNotification={addNotification}
             />
           ))}
         </div>

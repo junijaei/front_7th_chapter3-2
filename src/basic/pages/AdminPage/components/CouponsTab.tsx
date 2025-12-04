@@ -1,10 +1,14 @@
 import { useCoupons } from '@/hooks/useCoupons';
-import { addNotification } from '@/models/notification';
+import { Notification } from '@/models/notification';
 import { CouponsForm } from '@/pages/AdminPage/components/CouponForm';
 import { formatPercentage, formatPrice } from '@/utils/formatters';
 import { useState } from 'react';
 
-export const CouponsTab = () => {
+export const CouponsTab = ({
+  addNotification,
+}: {
+  addNotification: (message: string, type: Notification['type']) => void;
+}) => {
   const [showCouponForm, setShowCouponForm] = useState(false);
 
   const { coupons, addCoupon, removeCoupon } = useCoupons();
@@ -87,6 +91,7 @@ export const CouponsTab = () => {
           <CouponsForm
             addCoupon={addCoupon}
             close={() => setShowCouponForm(false)}
+            addNotification={addNotification}
           />
         )}
       </div>

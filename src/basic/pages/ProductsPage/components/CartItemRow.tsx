@@ -1,5 +1,5 @@
 import { calculateItemTotal } from '@/models/cart';
-import { addNotification } from '@/models/notification';
+import { Notification } from '@/models/notification';
 import type { CartItem as CartItemType, CartValidation } from '@/types';
 import { formatPrice } from '@/utils/formatters';
 import { useMemo } from 'react';
@@ -9,11 +9,13 @@ export const CartItemRow = ({
   cart,
   removeFromCart,
   updateQuantity,
+  addNotification,
 }: {
   cartItem: CartItemType;
   cart: CartItemType[];
   removeFromCart: (productId: string) => CartValidation;
   updateQuantity: (productId: string, newQuantity: number) => CartValidation;
+  addNotification: (message: string, type: Notification['type']) => void;
 }) => {
   const itemTotal = useMemo(
     () => calculateItemTotal(cartItem, cart),

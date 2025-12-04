@@ -1,31 +1,34 @@
-import {
-  Notification,
-  notificationManager,
-  removeNotification as removeNotificationGlobal,
-} from '@/models/notification';
-import { useEffect, useState } from 'react';
+import { Notification } from '@/models/notification';
+import { useCallback, useState } from 'react';
 
-/**
- * 전역 NotificationManager를 구독하는 Hook
- * 어디서든 addNotification을 import해서 사용 가능
- */
 export const useNotifications = () => {
-  const [notifications, setNotifications] = useState<Notification[]>(
-    notificationManager.getNotifications()
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  const addNotification = useCallback(
+    (message: string, type: Notification['type'] = 'info') => {
+      const notification: Notification = {
+        id: Date.now() + Math.random(), // 고유 ID 생성
+        message,
+        type,
+      };
+
+      setNotifications((prev) => [...prev, notification]);
+
+      // 3초 후 자동 제거
+      setTimeout(() => {
+        setNotifications((prev) => prev.filter((n) => n.id !== notification.id));
+      }, 3000);
+    },
+    []
   );
 
-  useEffect(() => {
-    // NotificationManager 구독
-    const unsubscribe = notificationManager.subscribe((newNotifications) => {
-      setNotifications(newNotifications);
-    });
-
-    // cleanup: 컴포넌트 언마운트 시 구독 해제
-    return unsubscribe;
+  const removeNotification = useCallback((id: number) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
   }, []);
 
   return {
     notifications,
-    removeNotification: removeNotificationGlobal,
+    addNotification,
+    removeNotification,
   };
 };

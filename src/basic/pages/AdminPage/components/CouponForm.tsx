@@ -1,13 +1,18 @@
 import { Input } from '@/components/ui';
 import { useCouponForm } from '@/hooks/useCouponForm';
-import { addNotification } from '@/models/notification';
+import { Notification } from '@/models/notification';
 import { Coupon, CouponValidation } from '@/types';
 
 interface CouponsFormProps {
   addCoupon: (newCoupon: Coupon) => CouponValidation;
   close: () => void;
+  addNotification: (message: string, type: Notification['type']) => void;
 }
-export const CouponsForm = ({ addCoupon, close }: CouponsFormProps) => {
+export const CouponsForm = ({
+  addCoupon,
+  close,
+  addNotification,
+}: CouponsFormProps) => {
   const { form, onBlurHandler, onChangeHandler, onSubmit } = useCouponForm(
     addCoupon,
     close

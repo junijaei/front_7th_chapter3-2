@@ -1,12 +1,13 @@
 import { Input } from '@/components/ui';
 import { useProductForm } from '@/hooks/useProductForm';
-import { addNotification } from '@/models/notification';
+import { Notification } from '@/models/notification';
 import { Product, ProductValidation } from '@/types';
 interface ProductFormProps {
   addProduct?: (product: Omit<Product, 'id'>) => ProductValidation;
   updateProduct?: (product: Partial<Product>) => ProductValidation;
   editingProduct?: Product | null;
   close: () => void;
+  addNotification: (message: string, type: Notification['type']) => void;
 }
 
 export const ProductForm = ({
@@ -14,6 +15,7 @@ export const ProductForm = ({
   updateProduct,
   editingProduct,
   close,
+  addNotification,
 }: ProductFormProps) => {
   const isEditMode = !!editingProduct;
 

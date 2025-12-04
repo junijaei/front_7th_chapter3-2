@@ -1,5 +1,5 @@
 import { getRemainingStock } from '@/models/cart';
-import { addNotification } from '@/models/notification';
+import { Notification } from '@/models/notification';
 import { CartItem, CartValidation, Product } from '@/types';
 import { formatPrice } from '@/utils/formatters';
 import clsx from 'clsx';
@@ -9,12 +9,14 @@ interface ProductItemProps {
   product: Product;
   cart: CartItem[];
   onAddToCart: (product: Product) => CartValidation;
+  addNotification: (message: string, type: Notification['type']) => void;
 }
 
 export const ProductItem = ({
   product,
   cart,
   onAddToCart,
+  addNotification,
 }: ProductItemProps) => {
   const remainingStock = useMemo(
     () => getRemainingStock(cart, product),
@@ -78,7 +80,7 @@ export const ProductItem = ({
         {/* 가격 정보 */}
         <div className="mb-3">
           <p className="text-lg font-bold text-gray-900">
-            {formatPrice(product.price)}
+            {formatPrice(product.price)}원
           </p>
           {product.discounts.length > 0 && (
             <p className="text-xs text-gray-500">
