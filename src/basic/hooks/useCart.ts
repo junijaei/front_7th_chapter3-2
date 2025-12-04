@@ -1,56 +1,39 @@
-// TODO: 장바구니 관리 Hook
-// 힌트:
-// 1. 장바구니 상태 관리 (localStorage 연동)
-// 2. 상품 추가/삭제/수량 변경
-// 3. 쿠폰 적용
-// 4. 총액 계산
-// 5. 재고 확인
-//
-// 사용할 모델 함수:
-// - cartModel.addItemToCart
-// - cartModel.removeItemFromCart
-// - cartModel.updateCartItemQuantity
-// - cartModel.calculateCartTotal
-// - cartModel.getRemainingStock
-//
-// 반환할 값:
-// - cart: 장바구니 아이템 배열
-// - selectedCoupon: 선택된 쿠폰
-// - addToCart: 상품 추가 함수
-// - removeFromCart: 상품 제거 함수
-// - updateQuantity: 수량 변경 함수
-// - applyCoupon: 쿠폰 적용 함수
-// - calculateTotal: 총액 계산 함수
-// - getRemainingStock: 재고 확인 함수
-// - clearCart: 장바구니 비우기 함수
 import {
   addItemToCart,
   calculateCartTotal,
-  findProductFromCartById,
+  findItemFromCartById,
   getRemainingStock,
   removeItemFromCart,
-  updateCartItemQuantity,
-  validateAddCart,
+  updateItemQuantity,
+  validateAddCartItem,
   validateApplyCoupon,
-  validateRemoveCart,
+  validateRemoveCartItem,
+  validateUpdateCartItemQuantity,
 } from '@/models/cart';
 import { CartItem, CartValidation, Coupon, Product } from '@/types';
 import { useLocalStorage } from '@/utils/hooks/useLocalStorage';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 export function useCart() {
   const [cart, setCart] = useLocalStorage<CartItem[]>('cart', []);
   const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
 
+  /**
+   * 새 상품을 장바구니에 추가
+   * - 상품 재고 검증
+   * - 이미 있으면 수량 +1, 없으면 새로 추가
+   */
   const addToCart = useCallback(
     (product: Product): CartValidation => {
-      const result = validateAddCart(cart, product);
-      if (!result.valid) return result;
+      const validation = validateAddCartItem(cart, product);
+      if (!validation.valid) {
+        return validation;
+      }
 
       setCart((prevCart) => {
-        const existingItem = findProductFromCartById(cart, product.id);
+        const existingItem = findItemFromCartById(prevCart, product.id);
         if (existingItem) {
-          return updateCartItemQuantity(
+          return updateItemQuantity(
             prevCart,
             product.id,
             existingItem.quantity + 1
@@ -58,51 +41,92 @@ export function useCart() {
         }
         return addItemToCart(prevCart, product);
       });
-      return result;
+
+      return validation;
     },
     [cart, setCart]
   );
 
+  /**
+   * 장바구니에서 상품 삭제
+   * - 상품 존재 여부 검증
+   */
   const removeFromCart = useCallback(
     (productId: string): CartValidation => {
-      const result = validateRemoveCart(cart, productId);
-      if (result.valid)
-        setCart((prevCart) => removeItemFromCart(prevCart, productId));
-      return result;
+      const validation = validateRemoveCartItem(cart, productId);
+      if (!validation.valid) {
+        return validation;
+      }
+
+      setCart((prevCart) => removeItemFromCart(prevCart, productId));
+      return validation;
     },
     [cart, setCart]
   );
 
+  /**
+   * 장바구니 상품의 수량 변경
+   * - 0 이하면 삭제
+   * - 재고 범위 내에서 수량 변경
+   */
   const updateQuantity = useCallback(
-    (product: Product, newQuantity: number): CartValidation => {
-      if (newQuantity <= 0) {
-        return removeFromCart(product.id);
+    (productId: string, newQuantity: number): CartValidation => {
+      const validation = validateUpdateCartItemQuantity(
+        cart,
+        productId,
+        newQuantity
+      );
+      if (!validation.valid) {
+        return validation;
       }
-      return addToCart(product);
+
+      // validation이 성공이면 수량이 0 이하인 경우 삭제로 이미 처리됨
+      if (newQuantity > 0) {
+        setCart((prevCart) =>
+          updateItemQuantity(prevCart, productId, newQuantity)
+        );
+      } else {
+        setCart((prevCart) => removeItemFromCart(prevCart, productId));
+      }
+
+      return validation;
     },
-    [addToCart, removeFromCart]
+    [cart, setCart]
   );
 
-  const calculateTotal = useCallback(
-    (cart: CartItem[], selectedCoupon?: Coupon) => {
-      return calculateCartTotal(cart, selectedCoupon).totalAfterDiscount;
-    },
-    []
-  );
-
+  /**
+   * 쿠폰 적용
+   * - 최소 구매 금액 검증 (percentage 쿠폰)
+   */
   const applyCoupon = useCallback(
     (coupon: Coupon): CartValidation => {
-      const result = validateApplyCoupon(cart, coupon);
-      if (result.valid) setSelectedCoupon(coupon);
-      return result;
+      const validation = validateApplyCoupon(cart, coupon);
+      if (!validation.valid) {
+        return validation;
+      }
+
+      setSelectedCoupon(coupon);
+      return validation;
     },
     [cart]
   );
 
+  /**
+   * 장바구니 비우기
+   */
   const clearCart = useCallback(() => {
     setCart([]);
     setSelectedCoupon(null);
   }, [setCart]);
+
+  // 계산된 값들
+  const totals = useMemo(() => {
+    return calculateCartTotal(cart, selectedCoupon);
+  }, [cart, selectedCoupon]);
+
+  const totalItemCount = useMemo(() => {
+    return cart.reduce((sum, item) => sum + item.quantity, 0);
+  }, [cart]);
 
   return {
     cart,
@@ -111,8 +135,9 @@ export function useCart() {
     removeFromCart,
     updateQuantity,
     applyCoupon,
-    calculateTotal,
-    getRemainingStock,
     clearCart,
+    totals,
+    totalItemCount,
+    getRemainingStock,
   };
 }

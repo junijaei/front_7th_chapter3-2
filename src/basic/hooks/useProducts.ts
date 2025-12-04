@@ -6,7 +6,7 @@ import {
   updateProductInList,
   updateStockInList,
   validateAddProduct,
-  validateRemoveProduct,
+  validateRemoveCartItem,
   validateUpdateProduct,
 } from '@/models/product';
 import { Discount, Product, ProductValidation } from '@/types';
@@ -84,7 +84,7 @@ export function useProducts() {
 
   const deleteProduct = useCallback(
     (productId: string): ProductValidation => {
-      const result = validateRemoveProduct(products, productId);
+      const result = validateRemoveCartItem(products, productId);
       if (result.valid) {
         setProducts((prev) => removeProductInList(prev, productId));
       }

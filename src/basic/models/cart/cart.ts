@@ -1,17 +1,16 @@
 import { CartItem, Product } from '@/types';
 
-export const findProductFromCartById = (
-  cart: CartItem[],
-  productId: string
-) => {
+export const findItemFromCartById = (cart: CartItem[], productId: string) => {
   return cart.find((item) => item.product.id === productId);
 };
 
 export const getRemainingStock = (
-  cart: CartItem[],
-  product: Product
+  cart?: CartItem[],
+  product?: Product
 ): number => {
-  const cartItem = findProductFromCartById(cart, product.id);
+  console.log(cart, product);
+  if (!cart || !product) return 0;
+  const cartItem = findItemFromCartById(cart, product.id);
   const remaining = product.stock - (cartItem?.quantity || 0);
 
   return remaining;
@@ -24,7 +23,7 @@ export const addItemToCart = (
   return [...cart, { product, quantity: 1 }];
 };
 
-export const updateCartItemQuantity = (
+export const updateItemQuantity = (
   cart: CartItem[],
   productId: string,
   quantity: number

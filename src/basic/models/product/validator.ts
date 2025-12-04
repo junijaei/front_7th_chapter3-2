@@ -73,7 +73,7 @@ export const validateUpdateProduct = (
   return { valid: true, error: null, message: '상품이 수정되었습니다.' };
 };
 
-export const validateRemoveProduct = (
+export const validateRemoveCartItem = (
   products: Product[],
   productId: string
 ): ProductValidation => {
