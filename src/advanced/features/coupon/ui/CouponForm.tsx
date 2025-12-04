@@ -1,5 +1,5 @@
 import { Coupon, CouponValidation, useCouponForm } from '@/features/coupon';
-import { Notification } from '@/shared/hooks';
+import { useNotification } from '@/shared/contexts';
 import { Input } from '@/shared/ui';
 
 interface CouponsFormProps {
@@ -11,13 +11,9 @@ interface CouponsFormProps {
     }
   ) => void;
   close: () => void;
-  addNotification: (message: string, type: Notification['type']) => void;
 }
-export const CouponsForm = ({
-  addCoupon,
-  close,
-  addNotification,
-}: CouponsFormProps) => {
+export const CouponsForm = ({ addCoupon, close }: CouponsFormProps) => {
+  const { addNotification } = useNotification();
   const { form, onBlurHandler, onChangeHandler, onSubmit } = useCouponForm(
     addCoupon,
     close

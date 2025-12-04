@@ -1,16 +1,10 @@
 import { CartItemList, PaymentSummary, useCart } from '@/features/cart';
 import { CouponSelector, useCoupons } from '@/features/coupon';
 import { Product, ProductList, useProducts } from '@/features/product';
-import { Notification, useFilter } from '@/shared/hooks';
+import { useFilter } from '@/shared/hooks';
 import { ProductHeader } from '@/shared/ui';
 
-export const ProductsPage = ({
-  goPage,
-  addNotification,
-}: {
-  goPage: (id: string) => void;
-  addNotification: (message: string, type: Notification['type']) => void;
-}) => {
+export const ProductsPage = ({ goPage }: { goPage: (id: string) => void }) => {
   const {
     cart,
     selectedCoupon,
@@ -56,7 +50,6 @@ export const ProductsPage = ({
               cart={cart}
               products={filteredList}
               addToCart={addToCart}
-              addNotification={addNotification}
               isLoading={isFiltering}
               query={query}
             />
@@ -68,7 +61,6 @@ export const ProductsPage = ({
                 cart={cart}
                 removeFromCart={removeFromCart}
                 updateQuantity={updateQuantity}
-                addNotification={addNotification}
               />
               {cart.length > 0 && (
                 <>
@@ -76,13 +68,8 @@ export const ProductsPage = ({
                     coupons={coupons}
                     selectedCoupon={selectedCoupon}
                     applyCoupon={applyCoupon}
-                    addNotification={addNotification}
                   />
-                  <PaymentSummary
-                    totals={totals}
-                    addNotification={addNotification}
-                    clearCart={clearCart}
-                  />
+                  <PaymentSummary totals={totals} clearCart={clearCart} />
                 </>
               )}
             </div>

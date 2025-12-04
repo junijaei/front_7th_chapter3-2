@@ -1,14 +1,11 @@
 import { Product, ProductForm, useProducts } from '@/features/product';
-import { Notification } from '@/shared/hooks';
+import { useNotification } from '@/shared/contexts';
 import { formatPrice } from '@/shared/utils';
 import { useState } from 'react';
 
-export const ProductsTab = ({
-  addNotification,
-}: {
-  addNotification: (message: string, type: Notification['type']) => void;
-}) => {
+export const ProductsTab = () => {
   const { products, addProduct, updateProduct, deleteProduct } = useProducts();
+  const { addNotification } = useNotification();
 
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showProductForm, setShowProductForm] = useState(false);
@@ -122,7 +119,6 @@ export const ProductsTab = ({
           updateProduct={updateProduct}
           editingProduct={editingProduct}
           close={closeForm}
-          addNotification={addNotification}
         />
       )}
     </section>

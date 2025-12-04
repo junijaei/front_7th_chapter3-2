@@ -1,18 +1,13 @@
 import { ADMIN_TABS } from '@/constants/tabs';
-import { Notification, useTab } from '@/shared/hooks';
+import { useTab } from '@/shared/hooks';
 import { AdminHeader } from '@/shared/ui';
 import { clsx } from 'clsx';
 
-export const AdminPage = ({
-  goPage,
-  addNotification,
-}: {
-  goPage: (id: string) => void;
-  addNotification: (message: string, type: Notification['type']) => void;
-}) => {
-  const { activeTab, changeTab, ActiveComponent } = useTab<{
-    addNotification: (message: string, type: Notification['type']) => void;
-  }>(ADMIN_TABS, 'products');
+export const AdminPage = ({ goPage }: { goPage: (id: string) => void }) => {
+  const { activeTab, changeTab, ActiveComponent } = useTab(
+    ADMIN_TABS,
+    'products'
+  );
 
   return (
     <>
@@ -45,7 +40,7 @@ export const AdminPage = ({
               ))}
             </nav>
           </div>
-          <ActiveComponent addNotification={addNotification} />
+          <ActiveComponent />
         </div>
       </main>
     </>

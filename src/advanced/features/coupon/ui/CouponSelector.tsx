@@ -1,12 +1,11 @@
 import { CartValidation } from '@/features/cart';
 import { Coupon } from '@/features/coupon';
-import { Notification } from '@/shared/hooks';
+import { useNotification } from '@/shared/contexts';
 
 export const CouponSelector = ({
   coupons,
   selectedCoupon,
   applyCoupon,
-  addNotification,
 }: {
   coupons: Coupon[];
   selectedCoupon?: Coupon | null;
@@ -17,8 +16,8 @@ export const CouponSelector = ({
       onError?: (validation: CartValidation) => void;
     }
   ) => void;
-  addNotification: (message: string, type: Notification['type']) => void;
 }) => {
+  const { addNotification } = useNotification();
   const handleApplyCoupon = (couponCode: string) => {
     if (!couponCode) return;
 

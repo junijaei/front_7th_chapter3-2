@@ -1,4 +1,3 @@
-import { Notification } from '@/shared/hooks';
 import { Product, ProductItem } from '@/features/product';
 import { CartItem, CartValidation } from '@/features/cart';
 
@@ -6,7 +5,6 @@ export const ProductList = ({
   products,
   cart,
   addToCart,
-  addNotification,
   isLoading,
   query,
 }: {
@@ -19,7 +17,6 @@ export const ProductList = ({
       onError?: (validation: CartValidation) => void;
     }
   ) => void;
-  addNotification: (message: string, type: Notification['type']) => void;
   isLoading: boolean;
   query: string;
 }) => {
@@ -53,7 +50,6 @@ export const ProductList = ({
               product={product}
               cart={cart}
               onAddToCart={addToCart}
-              addNotification={addNotification}
             />
           ))}
         </div>

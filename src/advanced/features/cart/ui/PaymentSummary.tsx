@@ -1,17 +1,16 @@
-import { Notification } from '@/shared/hooks';
+import { useNotification } from '@/shared/contexts';
 
 export const PaymentSummary = ({
   totals,
-  addNotification,
   clearCart,
 }: {
   totals: {
     totalBeforeDiscount: number;
     totalAfterDiscount: number;
   };
-  addNotification: (message: string, type: Notification['type']) => void;
   clearCart: () => void;
 }) => {
+  const { addNotification } = useNotification();
   const discountAmount = totals.totalBeforeDiscount - totals.totalAfterDiscount;
   const handleCompleteOrder = () => {
     const orderNumber = `ORD-${Date.now()}`;

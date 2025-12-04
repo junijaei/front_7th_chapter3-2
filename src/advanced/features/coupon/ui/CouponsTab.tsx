@@ -1,16 +1,13 @@
 import { CouponsForm, useCoupons } from '@/features/coupon';
-import { Notification } from '@/shared/hooks';
+import { useNotification } from '@/shared/contexts';
 import { formatPercentage, formatPrice } from '@/shared/utils';
 import { useState } from 'react';
 
-export const CouponsTab = ({
-  addNotification,
-}: {
-  addNotification: (message: string, type: Notification['type']) => void;
-}) => {
+export const CouponsTab = () => {
   const [showCouponForm, setShowCouponForm] = useState(false);
 
   const { coupons, addCoupon, removeCoupon } = useCoupons();
+  const { addNotification } = useNotification();
 
   return (
     <section className="bg-white rounded-lg border border-gray-200">
@@ -94,7 +91,6 @@ export const CouponsTab = ({
           <CouponsForm
             addCoupon={addCoupon}
             close={() => setShowCouponForm(false)}
-            addNotification={addNotification}
           />
         )}
       </div>

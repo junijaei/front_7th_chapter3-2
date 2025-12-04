@@ -1,5 +1,5 @@
 import { Product, ProductValidation, useProductForm } from '@/features/product';
-import { Notification } from '@/shared/hooks';
+import { useNotification } from '@/shared/contexts';
 import { Input } from '@/shared/ui';
 interface ProductFormProps {
   addProduct?: (
@@ -18,7 +18,6 @@ interface ProductFormProps {
   ) => void;
   editingProduct?: Product | null;
   close: () => void;
-  addNotification: (message: string, type: Notification['type']) => void;
 }
 
 export const ProductForm = ({
@@ -26,8 +25,8 @@ export const ProductForm = ({
   updateProduct,
   editingProduct,
   close,
-  addNotification,
 }: ProductFormProps) => {
+  const { addNotification } = useNotification();
   const isEditMode = !!editingProduct;
 
   const { form, onBlurHandler, onChangeHandler, onSubmit, setForm } =

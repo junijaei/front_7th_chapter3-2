@@ -1,5 +1,5 @@
 import { calculateItemTotal, CartItem, CartValidation } from '@/features/cart';
-import { Notification } from '@/shared/hooks';
+import { useNotification } from '@/shared/contexts';
 import { formatPrice } from '@/shared/utils';
 import { useMemo } from 'react';
 
@@ -8,7 +8,6 @@ export const CartItemRow = ({
   cart,
   removeFromCart,
   updateQuantity,
-  addNotification,
 }: {
   cartItem: CartItem;
   cart: CartItem[];
@@ -27,8 +26,8 @@ export const CartItemRow = ({
       onError?: (validation: CartValidation) => void;
     }
   ) => void;
-  addNotification: (message: string, type: Notification['type']) => void;
 }) => {
+  const { addNotification } = useNotification();
   const itemTotal = useMemo(
     () => calculateItemTotal(cartItem, cart),
     [cartItem, cart]

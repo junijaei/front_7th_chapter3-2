@@ -1,6 +1,6 @@
 import { CartItem, CartValidation, getRemainingStock } from '@/features/cart';
 import { Product } from '@/features/product';
-import { Notification } from '@/shared/hooks';
+import { useNotification } from '@/shared/contexts';
 import { formatPrice } from '@/shared/utils';
 import clsx from 'clsx';
 import { useMemo } from 'react';
@@ -15,15 +15,14 @@ interface ProductItemProps {
       onError?: (validation: CartValidation) => void;
     }
   ) => void;
-  addNotification: (message: string, type: Notification['type']) => void;
 }
 
 export const ProductItem = ({
   product,
   cart,
   onAddToCart,
-  addNotification,
 }: ProductItemProps) => {
+  const { addNotification } = useNotification();
   const remainingStock = useMemo(
     () => getRemainingStock(cart, product),
     [cart, product]
