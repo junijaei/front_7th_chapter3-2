@@ -10,7 +10,13 @@ const initialCouponForm: Coupon = {
   discountValue: 0,
 };
 export const useCouponForm = (
-  addCoupon: (newCoupon: Coupon) => CouponValidation,
+  addCoupon: (
+    newCoupon: Coupon,
+    options?: {
+      onSuccess?: (validation: CouponValidation) => void;
+      onError?: (validation: CouponValidation) => void;
+    }
+  ) => void,
   close: () => void
 ) => {
   const [form, setForm] = useState<Coupon>(initialCouponForm);
@@ -38,13 +44,21 @@ export const useCouponForm = (
   };
 
   const onBlurHandler =
-    (field: keyof Coupon) => (e: FocusEvent<HTMLInputElement>) => {
+    (
+      field: keyof Coupon,
+      options?: {
+        onError?: (validation: CouponValidation) => void;
+      }
+    ) =>
+    (e: FocusEvent<HTMLInputElement>) => {
       if (field === 'discountValue') {
         const value = parseInt(e.target.value) || 0;
 
         const result = validateCouponDiscount(form.discountType, value);
         setValue(field, normalizeValue(field, value, form));
-        return result;
+        if (!result.valid) {
+          options?.onError?.(result);
+        }
       }
     };
 
@@ -61,14 +75,25 @@ export const useCouponForm = (
       }
     };
 
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    const result = addCoupon(form);
-    if (result.valid) {
-      reset();
-      close();
+  const onSubmit = (
+    e: FormEvent,
+    options?: {
+      onSuccess?: (validation: CouponValidation) => void;
+      onError?: (validation: CouponValidation) => void;
     }
-    return result;
+  ) => {
+    e.preventDefault();
+
+    addCoupon(form, {
+      onSuccess: (validation) => {
+        reset();
+        close();
+        options?.onSuccess?.(validation);
+      },
+      onError: (validation) => {
+        options?.onError?.(validation);
+      },
+    });
   };
 
   const reset = () => {

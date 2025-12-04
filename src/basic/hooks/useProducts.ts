@@ -54,41 +54,70 @@ export function useProducts() {
   );
 
   const addProduct = useCallback(
-    (newProduct: Omit<Product, 'id'>): ProductValidation => {
-      const result = validateAddProduct(products, newProduct);
-      if (result.valid) {
-        setProducts((prev) => addProductToList(prev, newProduct));
+    (
+      newProduct: Omit<Product, 'id'>,
+      options?: {
+        onSuccess?: (validation: ProductValidation) => void;
+        onError?: (validation: ProductValidation) => void;
       }
-      return result;
+    ) => {
+      const result = validateAddProduct(products, newProduct);
+      if (!result.valid) {
+        options?.onError?.(result);
+        return;
+      }
+
+      setProducts((prev) => addProductToList(prev, newProduct));
+      options?.onSuccess?.(result);
     },
     [products, setProducts]
   );
 
   const updateProduct = useCallback(
-    (product: Partial<Product>): ProductValidation => {
+    (
+      product: Partial<Product>,
+      options?: {
+        onSuccess?: (validation: ProductValidation) => void;
+        onError?: (validation: ProductValidation) => void;
+      }
+    ) => {
       if (!product.id) {
-        return {
+        options?.onError?.({
           valid: false,
           error: 'NOT_FOUND',
           message: '상품 ID가 필요합니다.',
-        };
+        });
+        return;
       }
+
       const result = validateUpdateProduct(products, product.id, product);
-      if (result.valid) {
-        setProducts((prev) => updateProductInList(prev, product));
+      if (!result.valid) {
+        options?.onError?.(result);
+        return;
       }
-      return result;
+
+      setProducts((prev) => updateProductInList(prev, product));
+      options?.onSuccess?.(result);
     },
     [products, setProducts]
   );
 
   const deleteProduct = useCallback(
-    (productId: string): ProductValidation => {
-      const result = validateRemoveCartItem(products, productId);
-      if (result.valid) {
-        setProducts((prev) => removeProductInList(prev, productId));
+    (
+      productId: string,
+      options?: {
+        onSuccess?: (validation: ProductValidation) => void;
+        onError?: (validation: ProductValidation) => void;
       }
-      return result;
+    ) => {
+      const result = validateRemoveCartItem(products, productId);
+      if (!result.valid) {
+        options?.onError?.(result);
+        return;
+      }
+
+      setProducts((prev) => removeProductInList(prev, productId));
+      options?.onSuccess?.(result);
     },
     [products, setProducts]
   );

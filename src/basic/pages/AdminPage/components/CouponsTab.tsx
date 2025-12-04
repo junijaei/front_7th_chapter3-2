@@ -41,8 +41,12 @@ export const CouponsTab = ({
                 </div>
                 <button
                   onClick={() => {
-                    const { valid, message } = removeCoupon(coupon.code);
-                    addNotification(message, valid ? 'success' : 'error');
+                    removeCoupon(coupon.code, {
+                      onSuccess: ({ message }) =>
+                        addNotification(message, 'success'),
+                      onError: ({ message }) =>
+                        addNotification(message, 'error'),
+                    });
                   }}
                   className="text-gray-400 hover:text-red-600 transition-colors"
                 >

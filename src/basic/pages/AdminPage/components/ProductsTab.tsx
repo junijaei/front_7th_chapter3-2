@@ -26,8 +26,11 @@ export const ProductsTab = ({
   };
 
   const handleDeleteClick = (productId: string) => {
-    const { valid, message } = deleteProduct(productId);
-    addNotification(message, valid ? 'success' : 'error');
+    deleteProduct(productId, {
+      onSuccess: ({ message }) =>
+        addNotification(message || '상품이 삭제되었습니다', 'success'),
+      onError: ({ message }) => addNotification(message, 'error'),
+    });
   };
 
   const closeForm = () => {

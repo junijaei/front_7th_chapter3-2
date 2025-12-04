@@ -8,7 +8,13 @@ import { useMemo } from 'react';
 interface ProductItemProps {
   product: Product;
   cart: CartItem[];
-  onAddToCart: (product: Product) => CartValidation;
+  onAddToCart: (
+    product: Product,
+    options?: {
+      onSuccess?: (validation: CartValidation) => void;
+      onError?: (validation: CartValidation) => void;
+    }
+  ) => void;
   addNotification: (message: string, type: Notification['type']) => void;
 }
 
@@ -24,12 +30,11 @@ export const ProductItem = ({
   );
 
   const handleAddToCart = () => {
-    const result = onAddToCart(product);
-    if (!result.valid) {
-      addNotification(result.message || '장바구니에 담을 수 없습니다', 'error');
-    } else if (result.message) {
-      addNotification(result.message, 'success');
-    }
+    onAddToCart(product, {
+      onSuccess: ({ message }) =>
+        addNotification(message || '장바구니에 담았습니다', 'success'),
+      onError: ({ message }) => addNotification(message, 'error'),
+    });
   };
 
   const maxDiscountRate = useMemo(() => {

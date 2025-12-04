@@ -24,10 +24,17 @@ export function useCart() {
    * - 이미 있으면 수량 +1, 없으면 새로 추가
    */
   const addToCart = useCallback(
-    (product: Product): CartValidation => {
+    (
+      product: Product,
+      options?: {
+        onSuccess?: (validation: CartValidation) => void;
+        onError?: (validation: CartValidation) => void;
+      }
+    ) => {
       const validation = validateAddCartItem(cart, product);
       if (!validation.valid) {
-        return validation;
+        options?.onError?.(validation);
+        return;
       }
 
       setCart((prevCart) => {
@@ -42,7 +49,7 @@ export function useCart() {
         return addItemToCart(prevCart, product);
       });
 
-      return validation;
+      options?.onSuccess?.(validation);
     },
     [cart, setCart]
   );
@@ -52,14 +59,21 @@ export function useCart() {
    * - 상품 존재 여부 검증
    */
   const removeFromCart = useCallback(
-    (productId: string): CartValidation => {
+    (
+      productId: string,
+      options?: {
+        onSuccess?: (validation: CartValidation) => void;
+        onError?: (validation: CartValidation) => void;
+      }
+    ) => {
       const validation = validateRemoveCartItem(cart, productId);
       if (!validation.valid) {
-        return validation;
+        options?.onError?.(validation);
+        return;
       }
 
       setCart((prevCart) => removeItemFromCart(prevCart, productId));
-      return validation;
+      options?.onSuccess?.(validation);
     },
     [cart, setCart]
   );
@@ -70,14 +84,22 @@ export function useCart() {
    * - 재고 범위 내에서 수량 변경
    */
   const updateQuantity = useCallback(
-    (productId: string, newQuantity: number): CartValidation => {
+    (
+      productId: string,
+      newQuantity: number,
+      options?: {
+        onSuccess?: (validation: CartValidation) => void;
+        onError?: (validation: CartValidation) => void;
+      }
+    ) => {
       const validation = validateUpdateCartItemQuantity(
         cart,
         productId,
         newQuantity
       );
       if (!validation.valid) {
-        return validation;
+        options?.onError?.(validation);
+        return;
       }
 
       // validation이 성공이면 수량이 0 이하인 경우 삭제로 이미 처리됨
@@ -89,7 +111,7 @@ export function useCart() {
         setCart((prevCart) => removeItemFromCart(prevCart, productId));
       }
 
-      return validation;
+      options?.onSuccess?.(validation);
     },
     [cart, setCart]
   );
@@ -99,14 +121,21 @@ export function useCart() {
    * - 최소 구매 금액 검증 (percentage 쿠폰)
    */
   const applyCoupon = useCallback(
-    (coupon: Coupon): CartValidation => {
+    (
+      coupon: Coupon,
+      options?: {
+        onSuccess?: (validation: CartValidation) => void;
+        onError?: (validation: CartValidation) => void;
+      }
+    ) => {
       const validation = validateApplyCoupon(cart, coupon);
       if (!validation.valid) {
-        return validation;
+        options?.onError?.(validation);
+        return;
       }
 
       setSelectedCoupon(coupon);
-      return validation;
+      options?.onSuccess?.(validation);
     },
     [cart]
   );

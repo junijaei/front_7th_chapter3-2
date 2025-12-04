@@ -25,20 +25,41 @@ export function useCoupons() {
   );
 
   const addCoupon = useCallback(
-    (newCoupon: Coupon): CouponValidation => {
+    (
+      newCoupon: Coupon,
+      options?: {
+        onSuccess?: (validation: CouponValidation) => void;
+        onError?: (validation: CouponValidation) => void;
+      }
+    ) => {
       const result = validateAddCoupon(coupons, newCoupon);
-      if (result.valid) setCoupons((prev) => [...prev, newCoupon]);
-      return result;
+      if (!result.valid) {
+        options?.onError?.(result);
+        return;
+      }
+
+      setCoupons((prev) => [...prev, newCoupon]);
+      options?.onSuccess?.(result);
     },
     [coupons, setCoupons]
   );
 
   const removeCoupon = useCallback(
-    (couponCode: string): CouponValidation => {
+    (
+      couponCode: string,
+      options?: {
+        onSuccess?: (validation: CouponValidation) => void;
+        onError?: (validation: CouponValidation) => void;
+      }
+    ) => {
       const result = validateRemoveCoupon(coupons, couponCode);
-      if (result.valid)
-        setCoupons((prev) => prev.filter((c) => c.code !== couponCode));
-      return result;
+      if (!result.valid) {
+        options?.onError?.(result);
+        return;
+      }
+
+      setCoupons((prev) => prev.filter((c) => c.code !== couponCode));
+      options?.onSuccess?.(result);
     },
     [coupons, setCoupons]
   );

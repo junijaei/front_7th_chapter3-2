@@ -3,8 +3,20 @@ import { useProductForm } from '@/hooks/useProductForm';
 import { Notification } from '@/models/notification';
 import { Product, ProductValidation } from '@/types';
 interface ProductFormProps {
-  addProduct?: (product: Omit<Product, 'id'>) => ProductValidation;
-  updateProduct?: (product: Partial<Product>) => ProductValidation;
+  addProduct?: (
+    product: Omit<Product, 'id'>,
+    options?: {
+      onSuccess?: (validation: ProductValidation) => void;
+      onError?: (validation: ProductValidation) => void;
+    }
+  ) => void;
+  updateProduct?: (
+    product: Partial<Product>,
+    options?: {
+      onSuccess?: (validation: ProductValidation) => void;
+      onError?: (validation: ProductValidation) => void;
+    }
+  ) => void;
   editingProduct?: Product | null;
   close: () => void;
   addNotification: (message: string, type: Notification['type']) => void;
@@ -21,17 +33,18 @@ export const ProductForm = ({
 
   const { form, onBlurHandler, onChangeHandler, onSubmit, setForm } =
     useProductForm(
-      (product) => {
+      (product, options) => {
         if (isEditMode && updateProduct && editingProduct) {
-          return updateProduct({ ...product, id: editingProduct.id });
+          updateProduct({ ...product, id: editingProduct.id }, options);
         } else if (addProduct) {
-          return addProduct(product);
+          addProduct(product, options);
+        } else {
+          options?.onError?.({
+            valid: false,
+            error: 'NOT_FOUND',
+            message: '작업을 수행할 수 없습니다.',
+          });
         }
-        return {
-          valid: false,
-          error: 'NOT_FOUND',
-          message: '작업을 수행할 수 없습니다.',
-        };
       },
       close,
       editingProduct
@@ -41,8 +54,11 @@ export const ProductForm = ({
     <div className="p-6 border-t border-gray-200 bg-gray-50">
       <form
         onSubmit={(e) => {
-          const { valid, message } = onSubmit(e);
-          addNotification(message, valid ? 'success' : 'error');
+          onSubmit(e, {
+            onSuccess: ({ message }) =>
+              addNotification(message || '상품이 저장되었습니다', 'success'),
+            onError: ({ message }) => addNotification(message, 'error'),
+          });
         }}
         className="space-y-4"
       >
@@ -80,9 +96,9 @@ export const ProductForm = ({
               value={form.price === 0 ? '' : form.price}
               onChange={onChangeHandler('price')}
               onBlur={(e) => {
-                const result = onBlurHandler('price')(e);
-                if (result && !result.valid)
-                  addNotification(result.message, 'error');
+                onBlurHandler('price', {
+                  onError: ({ message }) => addNotification(message, 'error'),
+                })(e);
               }}
               placeholder="숫자만 입력"
               required
@@ -97,9 +113,9 @@ export const ProductForm = ({
               value={form.stock === 0 ? '' : form.stock}
               onChange={onChangeHandler('stock')}
               onBlur={(e) => {
-                const result = onBlurHandler('stock')(e);
-                if (result && !result.valid)
-                  addNotification(result.message, 'error');
+                onBlurHandler('stock', {
+                  onError: ({ message }) => addNotification(message, 'error'),
+                })(e);
               }}
               placeholder="숫자만 입력"
               required

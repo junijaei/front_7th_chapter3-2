@@ -4,7 +4,13 @@ import { Notification } from '@/models/notification';
 import { Coupon, CouponValidation } from '@/types';
 
 interface CouponsFormProps {
-  addCoupon: (newCoupon: Coupon) => CouponValidation;
+  addCoupon: (
+    newCoupon: Coupon,
+    callbacks?: {
+      onSuccess?: (validation: CouponValidation) => void;
+      onError?: (validation: CouponValidation) => void;
+    }
+  ) => void;
   close: () => void;
   addNotification: (message: string, type: Notification['type']) => void;
 }
@@ -22,8 +28,10 @@ export const CouponsForm = ({
     <div className="mt-6 p-4 bg-gray-50 rounded-lg">
       <form
         onSubmit={(e) => {
-          const { valid, message } = onSubmit(e);
-          addNotification(message, valid ? 'success' : 'error');
+          onSubmit(e, {
+            onSuccess: ({ message }) => addNotification(message, 'success'),
+            onError: ({ message }) => addNotification(message, 'error'),
+          });
         }}
         className="space-y-4"
       >
@@ -73,9 +81,9 @@ export const CouponsForm = ({
               value={form.discountValue}
               onChange={onChangeHandler('discountValue')}
               onBlur={(e) => {
-                const result = onBlurHandler('discountValue')(e);
-                if (result && !result.valid)
-                  addNotification(result.message, 'error');
+                onBlurHandler('discountValue', {
+                  onError: ({ message }) => addNotification(message, 'error'),
+                })(e);
               }}
               placeholder={form.discountType === 'amount' ? '5000' : '10'}
               required

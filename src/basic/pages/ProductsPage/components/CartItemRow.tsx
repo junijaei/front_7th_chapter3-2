@@ -13,8 +13,21 @@ export const CartItemRow = ({
 }: {
   cartItem: CartItemType;
   cart: CartItemType[];
-  removeFromCart: (productId: string) => CartValidation;
-  updateQuantity: (productId: string, newQuantity: number) => CartValidation;
+  removeFromCart: (
+    productId: string,
+    options?: {
+      onSuccess?: (validation: CartValidation) => void;
+      onError?: (validation: CartValidation) => void;
+    }
+  ) => void;
+  updateQuantity: (
+    productId: string,
+    newQuantity: number,
+    options?: {
+      onSuccess?: (validation: CartValidation) => void;
+      onError?: (validation: CartValidation) => void;
+    }
+  ) => void;
   addNotification: (message: string, type: Notification['type']) => void;
 }) => {
   const itemTotal = useMemo(
@@ -29,24 +42,19 @@ export const CartItemRow = ({
     : 0;
 
   const handleRemove = () => {
-    const result = removeFromCart(cartItem.product.id);
-    if (!result.valid) {
-      addNotification(
-        result.message || '장바구니에서 삭제할 수 없습니다',
-        'error'
-      );
-    } else if (result.message) {
-      addNotification(result.message, 'success');
-    }
+    removeFromCart(cartItem.product.id, {
+      onSuccess: ({ message }) =>
+        addNotification(message || '장바구니에서 삭제되었습니다', 'success'),
+      onError: ({ message }) => addNotification(message, 'error'),
+    });
   };
 
   const handleUpdateQuantity = (newQuantity: number) => {
-    const result = updateQuantity(cartItem.product.id, newQuantity);
-    if (!result.valid) {
-      addNotification(result.message || '수량을 변경할 수 없습니다', 'error');
-    } else if (result.message) {
-      addNotification(result.message, 'success');
-    }
+    updateQuantity(cartItem.product.id, newQuantity, {
+      onSuccess: ({ message }) =>
+        addNotification(message || '수량이 변경되었습니다', 'success'),
+      onError: ({ message }) => addNotification(message, 'error'),
+    });
   };
 
   return (

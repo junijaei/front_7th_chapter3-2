@@ -40,12 +40,11 @@ export const ProductsPage = ({
       return;
     }
 
-    const result = applyCoupon(coupon);
-    if (!result.valid) {
-      addNotification(result.message || '쿠폰을 적용할 수 없습니다', 'error');
-    } else if (result.message) {
-      addNotification(result.message, 'success');
-    }
+    applyCoupon(coupon, {
+      onSuccess: ({ message }) =>
+        addNotification(message || '쿠폰이 적용되었습니다', 'success'),
+      onError: ({ message }) => addNotification(message, 'error'),
+    });
   };
 
   const handleCompleteOrder = () => {

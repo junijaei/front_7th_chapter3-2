@@ -12,7 +12,13 @@ const initialProductForm: Omit<Product, 'id'> = {
 };
 
 export const useProductForm = (
-  onSubmitAction: (product: Omit<Product, 'id'>) => ProductValidation,
+  onSubmitAction: (
+    product: Omit<Product, 'id'>,
+    options?: {
+      onSuccess?: (validation: ProductValidation) => void;
+      onError?: (validation: ProductValidation) => void;
+    }
+  ) => void,
   close: () => void,
   initialProduct?: Product | null
 ) => {
@@ -46,18 +52,28 @@ export const useProductForm = (
   };
 
   const onBlurHandler =
-    (field: keyof Omit<Product, 'id'>) => (e: FocusEvent<HTMLInputElement>) => {
+    (
+      field: keyof Omit<Product, 'id'>,
+      options?: {
+        onError?: (validation: ProductValidation) => void;
+      }
+    ) =>
+    (e: FocusEvent<HTMLInputElement>) => {
       if (field === 'price') {
         const value = parseInt(e.target.value) || 0;
         const result = validateSetProductPrice(value);
         setValue(field, normalizeValue(field, value));
-        return result;
+        if (!result.valid) {
+          options?.onError?.(result);
+        }
       }
       if (field === 'stock') {
         const value = parseInt(e.target.value) || 0;
         const result = validationSetStock(value);
         setValue(field, normalizeValue(field, value));
-        return result;
+        if (!result.valid) {
+          options?.onError?.(result);
+        }
       }
     };
 
@@ -73,14 +89,25 @@ export const useProductForm = (
       setValue(field, value);
     };
 
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    const result = onSubmitAction(form);
-    if (result.valid) {
-      reset();
-      close();
+  const onSubmit = (
+    e: FormEvent,
+    options?: {
+      onSuccess?: (validation: ProductValidation) => void;
+      onError?: (validation: ProductValidation) => void;
     }
-    return result;
+  ) => {
+    e.preventDefault();
+
+    onSubmitAction(form, {
+      onSuccess: (validation) => {
+        reset();
+        close();
+        options?.onSuccess?.(validation);
+      },
+      onError: (validation) => {
+        options?.onError?.(validation);
+      },
+    });
   };
 
   const reset = () => {
