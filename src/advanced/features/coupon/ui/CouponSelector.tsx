@@ -1,23 +1,12 @@
-import { CartValidation } from '@/features/cart';
-import { Coupon } from '@/features/coupon';
+import { useCartStore } from '@/features/cart';
+import { useCouponStore } from '@/features/coupon';
 import { useNotification } from '@/shared/contexts';
 
-export const CouponSelector = ({
-  coupons,
-  selectedCoupon,
-  applyCoupon,
-}: {
-  coupons: Coupon[];
-  selectedCoupon?: Coupon | null;
-  applyCoupon: (
-    coupon: Coupon,
-    options?: {
-      onSuccess?: (validation: CartValidation) => void;
-      onError?: (validation: CartValidation) => void;
-    }
-  ) => void;
-}) => {
+export const CouponSelector = () => {
   const { addNotification } = useNotification();
+  const { coupons } = useCouponStore();
+  const { selectedCoupon, applyCoupon } = useCartStore();
+
   const handleApplyCoupon = (couponCode: string) => {
     if (!couponCode) return;
 

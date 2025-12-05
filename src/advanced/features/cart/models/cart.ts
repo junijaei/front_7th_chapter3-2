@@ -1,4 +1,5 @@
-import { CartItem, Product } from '@/types';
+import { Product } from '@/features/product';
+import { CartItem } from '@/features/cart/cart.types';
 
 export const findItemFromCartById = (cart: CartItem[], productId: string) => {
   return cart.find((item) => item.product.id === productId);

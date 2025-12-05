@@ -33,7 +33,7 @@ export const validationSetStock = (value: number): ProductValidation => {
 };
 
 export const validateAddProduct = (
-  products: Product[],
+  _products: Product[],
   newProduct: Omit<Product, 'id'>
 ): ProductValidation => {
   // 가격 검증

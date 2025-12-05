@@ -1,33 +1,13 @@
-import { calculateItemTotal, CartItem, CartValidation } from '@/features/cart';
+import { useCartStore } from '@/features/cart';
+import { calculateItemTotal, CartItem } from '@/features/cart';
 import { useNotification } from '@/shared/contexts';
 import { formatPrice } from '@/shared/utils';
 import { useMemo } from 'react';
 
-export const CartItemRow = ({
-  cartItem,
-  cart,
-  removeFromCart,
-  updateQuantity,
-}: {
-  cartItem: CartItem;
-  cart: CartItem[];
-  removeFromCart: (
-    productId: string,
-    options?: {
-      onSuccess?: (validation: CartValidation) => void;
-      onError?: (validation: CartValidation) => void;
-    }
-  ) => void;
-  updateQuantity: (
-    productId: string,
-    newQuantity: number,
-    options?: {
-      onSuccess?: (validation: CartValidation) => void;
-      onError?: (validation: CartValidation) => void;
-    }
-  ) => void;
-}) => {
+export const CartItemRow = ({ cartItem }: { cartItem: CartItem }) => {
   const { addNotification } = useNotification();
+  const { cart, removeFromCart, updateQuantity } = useCartStore();
+
   const itemTotal = useMemo(
     () => calculateItemTotal(cartItem, cart),
     [cartItem, cart]

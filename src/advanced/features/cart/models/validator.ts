@@ -3,7 +3,9 @@ import {
   findItemFromCartById,
   getRemainingStock,
 } from '@/features/cart/models';
-import { CartItem, CartValidation, Coupon, Product } from '@/types';
+import { CartItem, CartValidation } from '@/features/cart/cart.types';
+import { Coupon } from '@/features/coupon';
+import { Product } from '@/features/product';
 import { isValidStock } from '@/shared/utils/validators';
 
 /**

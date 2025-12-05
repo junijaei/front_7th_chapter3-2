@@ -1,22 +1,12 @@
-import { Product, ProductItem } from '@/features/product';
-import { CartItem, CartValidation } from '@/features/cart';
+import { ProductItem } from '@/advanced/features/product/ui/ProductItem';
+import { Product } from '@/advanced/features/product/product.types';
 
 export const ProductList = ({
   products,
-  cart,
-  addToCart,
   isLoading,
   query,
 }: {
   products: Product[];
-  cart: CartItem[];
-  addToCart: (
-    product: Product,
-    options?: {
-      onSuccess?: (validation: CartValidation) => void;
-      onError?: (validation: CartValidation) => void;
-    }
-  ) => void;
   isLoading: boolean;
   query: string;
 }) => {
@@ -45,12 +35,7 @@ export const ProductList = ({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {products.map((product) => (
-            <ProductItem
-              key={product.id}
-              product={product}
-              cart={cart}
-              onAddToCart={addToCart}
-            />
+            <ProductItem key={product.id} product={product} />
           ))}
         </div>
       )}

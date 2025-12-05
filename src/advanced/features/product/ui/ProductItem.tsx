@@ -1,4 +1,5 @@
-import { CartItem, CartValidation, getRemainingStock } from '@/features/cart';
+import { useCartStore } from '@/features/cart';
+import { getRemainingStock } from '@/features/cart';
 import { Product } from '@/features/product';
 import { useNotification } from '@/shared/contexts';
 import { formatPrice } from '@/shared/utils';
@@ -7,29 +8,19 @@ import { useMemo } from 'react';
 
 interface ProductItemProps {
   product: Product;
-  cart: CartItem[];
-  onAddToCart: (
-    product: Product,
-    options?: {
-      onSuccess?: (validation: CartValidation) => void;
-      onError?: (validation: CartValidation) => void;
-    }
-  ) => void;
 }
 
-export const ProductItem = ({
-  product,
-  cart,
-  onAddToCart,
-}: ProductItemProps) => {
+export const ProductItem = ({ product }: ProductItemProps) => {
   const { addNotification } = useNotification();
+  const { cart, addToCart } = useCartStore();
+
   const remainingStock = useMemo(
     () => getRemainingStock(cart, product),
     [cart, product]
   );
 
   const handleAddToCart = () => {
-    onAddToCart(product, {
+    addToCart(product, {
       onSuccess: ({ message }) =>
         addNotification(message || '장바구니에 담았습니다', 'success'),
       onError: ({ message }) => addNotification(message, 'error'),

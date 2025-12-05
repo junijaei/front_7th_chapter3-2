@@ -1,4 +1,5 @@
-import { CouponsForm, useCoupons } from '@/features/coupon';
+import { useCouponStore } from '@/features/coupon';
+import { CouponsForm } from '@/advanced/features/coupon/ui/CouponForm';
 import { useNotification } from '@/shared/contexts';
 import { formatPercentage, formatPrice } from '@/shared/utils';
 import { useState } from 'react';
@@ -6,7 +7,7 @@ import { useState } from 'react';
 export const CouponsTab = () => {
   const [showCouponForm, setShowCouponForm] = useState(false);
 
-  const { coupons, addCoupon, removeCoupon } = useCoupons();
+  const { coupons, addCoupon, removeCoupon } = useCouponStore();
   const { addNotification } = useNotification();
 
   return (

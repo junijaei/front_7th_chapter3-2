@@ -1,23 +1,16 @@
-import { CartItemList, PaymentSummary, useCart } from '@/features/cart';
-import { CouponSelector, useCoupons } from '@/features/coupon';
-import { Product, ProductList, useProducts } from '@/features/product';
+import { useCartStore } from '@/features/cart';
+import { useProductStore } from '@/features/product';
+import { CartItemList } from '@/advanced/features/cart/ui/CartItemList';
+import { PaymentSummary } from '@/advanced/features/cart/ui/PaymentSummary';
+import { CouponSelector } from '@/advanced/features/coupon/ui/CouponSelector';
+import { ProductList } from '@/advanced/features/product/ui/ProductList';
+import { Product } from '@/advanced/features/product/product.types';
 import { useFilter } from '@/shared/hooks';
-import { ProductHeader } from '@/shared/ui';
+import { ProductHeader } from '@/advanced/shared/ui/layout/ProductHeader';
 
 export const ProductsPage = ({ goPage }: { goPage: (id: string) => void }) => {
-  const {
-    cart,
-    selectedCoupon,
-    applyCoupon,
-    totals,
-    totalItemCount,
-    clearCart,
-    addToCart,
-    removeFromCart,
-    updateQuantity,
-  } = useCart();
-  const { coupons } = useCoupons();
-  const { products } = useProducts();
+  const { cart } = useCartStore();
+  const { products } = useProductStore();
 
   const productFilterFn = (list: Product[], query: string) => {
     return list.filter(
@@ -36,20 +29,12 @@ export const ProductsPage = ({ goPage }: { goPage: (id: string) => void }) => {
 
   return (
     <>
-      <ProductHeader
-        cart={cart}
-        query={query}
-        setQuery={setQuery}
-        totalItemCount={totalItemCount}
-        goPage={goPage}
-      />
+      <ProductHeader query={query} setQuery={setQuery} goPage={goPage} />
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="lg:col-span-3">
             <ProductList
-              cart={cart}
               products={filteredList}
-              addToCart={addToCart}
               isLoading={isFiltering}
               query={query}
             />
@@ -57,19 +42,11 @@ export const ProductsPage = ({ goPage }: { goPage: (id: string) => void }) => {
 
           <div className="lg:col-span-1">
             <div className="sticky top-24 space-y-4">
-              <CartItemList
-                cart={cart}
-                removeFromCart={removeFromCart}
-                updateQuantity={updateQuantity}
-              />
+              <CartItemList />
               {cart.length > 0 && (
                 <>
-                  <CouponSelector
-                    coupons={coupons}
-                    selectedCoupon={selectedCoupon}
-                    applyCoupon={applyCoupon}
-                  />
-                  <PaymentSummary totals={totals} clearCart={clearCart} />
+                  <CouponSelector />
+                  <PaymentSummary />
                 </>
               )}
             </div>

@@ -1,16 +1,10 @@
+import { useCartStore } from '@/features/cart';
 import { useNotification } from '@/shared/contexts';
 
-export const PaymentSummary = ({
-  totals,
-  clearCart,
-}: {
-  totals: {
-    totalBeforeDiscount: number;
-    totalAfterDiscount: number;
-  };
-  clearCart: () => void;
-}) => {
+export const PaymentSummary = () => {
   const { addNotification } = useNotification();
+  const { totals, clearCart } = useCartStore();
+
   const discountAmount = totals.totalBeforeDiscount - totals.totalAfterDiscount;
   const handleCompleteOrder = () => {
     const orderNumber = `ORD-${Date.now()}`;

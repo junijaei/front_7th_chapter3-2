@@ -1,10 +1,13 @@
-import { Product, ProductForm, useProducts } from '@/features/product';
+import { useProductStore } from '@/features/product';
+import { Product } from '@/advanced/features/product/product.types';
+import { ProductForm } from '@/advanced/features/product/ui/ProductForm';
 import { useNotification } from '@/shared/contexts';
 import { formatPrice } from '@/shared/utils';
 import { useState } from 'react';
 
 export const ProductsTab = () => {
-  const { products, addProduct, updateProduct, deleteProduct } = useProducts();
+  const { products, addProduct, updateProduct, deleteProduct } =
+    useProductStore();
   const { addNotification } = useNotification();
 
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -31,6 +34,52 @@ export const ProductsTab = () => {
   const closeForm = () => {
     setShowProductForm(false);
     setEditingProduct(null);
+  };
+
+  const handleAddProduct = (
+    product: Omit<Product, 'id'>,
+    options?: {
+      onSuccess?: (validation: any) => void;
+      onError?: (validation: any) => void;
+    }
+  ) => {
+    addProduct(product, {
+      ...options,
+      onSuccess: (validation) => {
+        addNotification(
+          validation.message || '상품이 추가되었습니다',
+          'success'
+        );
+        options?.onSuccess?.(validation);
+      },
+      onError: (validation) => {
+        addNotification(validation.message, 'error');
+        options?.onError?.(validation);
+      },
+    });
+  };
+
+  const handleUpdateProduct = (
+    product: Partial<Product>,
+    options?: {
+      onSuccess?: (validation: any) => void;
+      onError?: (validation: any) => void;
+    }
+  ) => {
+    updateProduct(product, {
+      ...options,
+      onSuccess: (validation) => {
+        addNotification(
+          validation.message || '상품이 수정되었습니다',
+          'success'
+        );
+        options?.onSuccess?.(validation);
+      },
+      onError: (validation) => {
+        addNotification(validation.message, 'error');
+        options?.onError?.(validation);
+      },
+    });
   };
 
   return (
@@ -115,8 +164,8 @@ export const ProductsTab = () => {
 
       {showProductForm && (
         <ProductForm
-          addProduct={addProduct}
-          updateProduct={updateProduct}
+          addProduct={handleAddProduct}
+          updateProduct={handleUpdateProduct}
           editingProduct={editingProduct}
           close={closeForm}
         />

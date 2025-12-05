@@ -1,5 +1,5 @@
-import { CartItemRow } from '@/features/cart/ui/CartItemRow';
-import { CartItem, CartValidation } from '@/types';
+import { useCartStore } from '@/features/cart';
+import { CartItemRow } from '@/advanced/features/cart/ui/CartItemRow';
 
 const EmptyCart = () => {
   return (
@@ -22,15 +22,8 @@ const EmptyCart = () => {
   );
 };
 
-export const CartItemList = ({
-  cart,
-  updateQuantity,
-  removeFromCart,
-}: {
-  cart: CartItem[];
-  removeFromCart: (productId: string) => CartValidation;
-  updateQuantity: (productId: string, newQuantity: number) => CartValidation;
-}) => {
+export const CartItemList = () => {
+  const { cart } = useCartStore();
   return (
     <section className="bg-white rounded-lg border border-gray-200 p-4">
       <h2 className="text-lg font-semibold mb-4 flex items-center">
@@ -54,13 +47,7 @@ export const CartItemList = ({
       ) : (
         <div className="space-y-3">
           {cart.map((item) => (
-            <CartItemRow
-              key={item.product.id}
-              cartItem={item}
-              cart={cart}
-              updateQuantity={updateQuantity}
-              removeFromCart={removeFromCart}
-            />
+            <CartItemRow key={item.product.id} cartItem={item} />
           ))}
         </div>
       )}
