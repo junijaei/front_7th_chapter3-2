@@ -1,6 +1,6 @@
 import { Product, ProductValidation, useProductForm } from '@/features/product';
 import { useNotification } from '@/shared/contexts';
-import { Input } from '@/shared/ui';
+import { Input, Button, IconButton, XIcon } from '@/shared/ui';
 interface ProductFormProps {
   addProduct?: (
     product: Omit<Product, 'id'>,
@@ -159,30 +159,16 @@ export const ProductForm = ({
                   placeholder="%"
                 />
                 <span className="text-sm">% 할인</span>
-                <button
-                  type="button"
+                <IconButton
+                  variant="danger"
                   onClick={() => {
                     const newDiscounts = form.discounts.filter(
                       (_, i) => i !== index
                     );
                     setForm({ ...form, discounts: newDiscounts });
                   }}
-                  className="text-red-600 hover:text-red-800"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
+                  icon={<XIcon />}
+                />
               </div>
             ))}
             <button
@@ -201,19 +187,12 @@ export const ProductForm = ({
         </div>
 
         <div className="flex justify-end gap-3">
-          <button
-            type="button"
-            onClick={() => close()}
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
+          <Button type="button" variant="secondary" onClick={() => close()}>
             취소
-          </button>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700"
-          >
+          </Button>
+          <Button type="submit" variant="primary">
             {isEditMode ? '수정' : '추가'}
-          </button>
+          </Button>
         </div>
       </form>
     </div>

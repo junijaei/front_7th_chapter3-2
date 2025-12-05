@@ -46,6 +46,7 @@ export default [
   // Regular source files configuration
   {
     files: ['**/*.{ts,tsx}'],
+    ignores: ['**/*.test.{ts,tsx}', '**/__tests__/**/*.{ts,tsx}'],
     languageOptions: {
       parser: tsparser,
       parserOptions: {

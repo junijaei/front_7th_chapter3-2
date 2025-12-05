@@ -2,6 +2,7 @@ import { useCartStore } from '@/features/cart';
 import { calculateItemTotal, CartItem } from '@/features/cart';
 import { useNotification } from '@/shared/contexts';
 import { formatPrice } from '@/shared/utils';
+import { Badge } from '@/shared/ui';
 import { useMemo } from 'react';
 
 export const CartItemRow = ({ cartItem }: { cartItem: CartItem }) => {
@@ -80,9 +81,9 @@ export const CartItemRow = ({ cartItem }: { cartItem: CartItem }) => {
         </div>
         <div className="text-right">
           {hasDiscount && (
-            <span className="text-xs text-red-500 font-medium block">
+            <Badge variant="red" className="block mb-1">
               -{discountRate}%
-            </span>
+            </Badge>
           )}
           <p className="text-sm font-medium text-gray-900">
             {formatPrice(itemTotal)}원

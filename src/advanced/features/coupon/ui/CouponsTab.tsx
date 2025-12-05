@@ -1,5 +1,4 @@
-import { useCouponStore } from '@/features/coupon';
-import { CouponsForm } from '@/advanced/features/coupon/ui/CouponForm';
+import { useCouponStore, CouponsForm } from '@/features/coupon';
 import { useNotification } from '@/shared/contexts';
 import { formatPercentage, formatPrice } from '@/shared/utils';
 import { useState } from 'react';

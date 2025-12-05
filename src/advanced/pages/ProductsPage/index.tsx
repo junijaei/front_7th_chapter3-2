@@ -1,12 +1,8 @@
-import { useCartStore } from '@/features/cart';
-import { useProductStore } from '@/features/product';
-import { CartItemList } from '@/advanced/features/cart/ui/CartItemList';
-import { PaymentSummary } from '@/advanced/features/cart/ui/PaymentSummary';
-import { CouponSelector } from '@/advanced/features/coupon/ui/CouponSelector';
-import { ProductList } from '@/advanced/features/product/ui/ProductList';
-import { Product } from '@/advanced/features/product/product.types';
+import { useCartStore, CartItemList, PaymentSummary } from '@/features/cart';
+import { useProductStore, ProductList, Product } from '@/features/product';
+import { CouponSelector } from '@/features/coupon';
 import { useFilter } from '@/shared/hooks';
-import { ProductHeader } from '@/advanced/shared/ui/layout/ProductHeader';
+import { ProductHeader } from '@/shared/ui';
 
 export const ProductsPage = ({ goPage }: { goPage: (id: string) => void }) => {
   const { cart } = useCartStore();

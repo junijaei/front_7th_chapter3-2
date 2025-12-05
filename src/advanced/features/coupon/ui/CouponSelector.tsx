@@ -1,6 +1,7 @@
 import { useCartStore } from '@/features/cart';
 import { useCouponStore } from '@/features/coupon';
 import { useNotification } from '@/shared/contexts';
+import { Select } from '@/shared/ui';
 
 export const CouponSelector = () => {
   const { addNotification } = useNotification();
@@ -24,8 +25,8 @@ export const CouponSelector = () => {
   };
 
   return (
-    <select
-      className="w-full text-sm border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500"
+    <Select
+      className="w-full text-sm"
       value={selectedCoupon?.code || ''}
       onChange={(e) => handleApplyCoupon(e.target.value)}
     >
@@ -39,6 +40,6 @@ export const CouponSelector = () => {
           )
         </option>
       ))}
-    </select>
+    </Select>
   );
 };

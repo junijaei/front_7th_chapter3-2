@@ -1,6 +1,6 @@
 import { Coupon, CouponValidation, useCouponForm } from '@/features/coupon';
 import { useNotification } from '@/shared/contexts';
-import { Input } from '@/shared/ui';
+import { Input, Button, Select } from '@/shared/ui';
 
 interface CouponsFormProps {
   addCoupon: (
@@ -58,15 +58,14 @@ export const CouponsForm = ({ addCoupon, close }: CouponsFormProps) => {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               할인 타입
             </label>
-            <select
+            <Select
               value={form.discountType}
               onChange={onChangeHandler('discountType')}
-              className="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 border text-sm"
               required
             >
               <option value="amount">정액 할인</option>
               <option value="percentage">정률 할인</option>
-            </select>
+            </Select>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -86,19 +85,12 @@ export const CouponsForm = ({ addCoupon, close }: CouponsFormProps) => {
           </div>
         </div>
         <div className="flex justify-end gap-3">
-          <button
-            type="button"
-            onClick={() => close()}
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
+          <Button type="button" variant="secondary" onClick={() => close()}>
             취소
-          </button>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700"
-          >
+          </Button>
+          <Button type="submit" variant="primary">
             쿠폰 생성
-          </button>
+          </Button>
         </div>
       </form>
     </div>

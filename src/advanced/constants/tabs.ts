@@ -1,5 +1,5 @@
-import { CouponsTab } from '@/advanced/features/coupon/ui/CouponsTab';
-import { ProductsTab } from '@/advanced/features/product/ui/ProductsTab';
+import { CouponsTab } from '@/features/coupon';
+import { ProductsTab } from '@/features/product';
 
 export const ADMIN_TABS = [
   { id: 'products', label: '상품 관리', component: ProductsTab },

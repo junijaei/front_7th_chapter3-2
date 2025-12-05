@@ -1,5 +1,4 @@
-import { useCartStore } from '@/features/cart';
-import { CartItemRow } from '@/advanced/features/cart/ui/CartItemRow';
+import { useCartStore, CartItemRow } from '@/features/cart';
 
 const EmptyCart = () => {
   return (

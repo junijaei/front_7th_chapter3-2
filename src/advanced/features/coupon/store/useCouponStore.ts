@@ -3,7 +3,7 @@ import {
   couponsAtom,
   addCouponAtom,
   removeCouponAtom,
-} from '@/advanced/features/coupon/store/coupon.atom';
+} from '@/features/coupon/store/coupon.atom';
 import { Coupon, CouponValidation } from '@/features/coupon';
 import { useCallback } from 'react';
 

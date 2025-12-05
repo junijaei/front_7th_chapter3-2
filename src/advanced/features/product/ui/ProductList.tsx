@@ -1,5 +1,4 @@
-import { ProductItem } from '@/advanced/features/product/ui/ProductItem';
-import { Product } from '@/advanced/features/product/product.types';
+import { ProductItem, Product } from '@/features/product';
 
 export const ProductList = ({
   products,

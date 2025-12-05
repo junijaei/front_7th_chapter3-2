@@ -1,6 +1,6 @@
-import { ADMIN_TABS } from '@/advanced/constants/tabs';
-import { useTab } from '@/advanced/shared/hooks/useTab';
-import { AdminHeader } from '@/advanced/shared/ui/layout/AdminHeader';
+import { ADMIN_TABS } from '@/constants/tabs';
+import { useTab } from '@/shared/hooks';
+import { AdminHeader } from '@/shared/ui';
 import { clsx } from 'clsx';
 
 export const AdminPage = ({ goPage }: { goPage: (id: string) => void }) => {

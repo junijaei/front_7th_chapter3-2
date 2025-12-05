@@ -1,6 +1,9 @@
-import { useProductStore } from '@/features/product';
-import { Product } from '@/advanced/features/product/product.types';
-import { ProductForm } from '@/advanced/features/product/ui/ProductForm';
+import {
+  Product,
+  ProductForm,
+  ProductValidation,
+  useProductStore,
+} from '@/features/product';
 import { useNotification } from '@/shared/contexts';
 import { formatPrice } from '@/shared/utils';
 import { useState } from 'react';
@@ -39,8 +42,8 @@ export const ProductsTab = () => {
   const handleAddProduct = (
     product: Omit<Product, 'id'>,
     options?: {
-      onSuccess?: (validation: any) => void;
-      onError?: (validation: any) => void;
+      onSuccess?: (validation: ProductValidation) => void;
+      onError?: (validation: ProductValidation) => void;
     }
   ) => {
     addProduct(product, {
@@ -62,8 +65,8 @@ export const ProductsTab = () => {
   const handleUpdateProduct = (
     product: Partial<Product>,
     options?: {
-      onSuccess?: (validation: any) => void;
-      onError?: (validation: any) => void;
+      onSuccess?: (validation: ProductValidation) => void;
+      onError?: (validation: ProductValidation) => void;
     }
   ) => {
     updateProduct(product, {

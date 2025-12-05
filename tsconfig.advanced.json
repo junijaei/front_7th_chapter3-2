@@ -6,7 +6,7 @@
       "@/features/*": ["./src/advanced/features/*"],
       "@/pages/*": ["./src/advanced/pages/*"],
       "@/shared/*": ["./src/advanced/shared/*"],
-      "@/*": ["./src/*"]
+      "@/*": ["./src/advanced/*"]
     }
   },
   "include": [

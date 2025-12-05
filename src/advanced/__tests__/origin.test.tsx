@@ -1,5 +1,5 @@
 // @ts-nocheck
-import App from '@/advanced/App';
+import App from '@/App';
 import '@/setupTests';
 import {
   fireEvent,

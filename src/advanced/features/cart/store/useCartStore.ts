@@ -9,7 +9,7 @@ import {
   updateQuantityAtom,
   applyCouponAtom,
   clearCartAtom,
-} from '@/advanced/features/cart/store/cart.atom';
+} from '@/features/cart/store/cart.atom';
 import { getRemainingStock, CartValidation } from '@/features/cart';
 import { Coupon } from '@/features/coupon';
 import { Product } from '@/features/product';

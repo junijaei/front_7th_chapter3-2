@@ -7,7 +7,7 @@ import {
   updateProductStockAtom,
   addProductDiscountAtom,
   removeProductDiscountAtom,
-} from '@/advanced/features/product/store/product.atom';
+} from '@/features/product/store/product.atom';
 import { Discount, Product, ProductValidation } from '@/features/product';
 import { useCallback } from 'react';
 
